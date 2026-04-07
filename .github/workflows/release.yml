@@ -33,7 +33,7 @@ jobs:
       dry_run: ${{ steps.info.outputs.dry_run }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -163,7 +163,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ needs.preflight.outputs.build_ref }}
 
@@ -231,7 +231,7 @@ jobs:
 
       - name: Upload packaged artifact
         if: ${{ !contains(matrix.target, 'windows-msvc') }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.archive }}
           path: ${{ matrix.archive }}
@@ -239,7 +239,7 @@ jobs:
 
       - name: Upload unsigned Windows binary
         if: ${{ contains(matrix.target, 'windows-msvc') }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.archive }}-unsigned-bin
           path: target/${{ matrix.target }}/release/${{ matrix.binary }}
@@ -255,13 +255,13 @@ jobs:
 
     steps:
       - name: Download unsigned Windows x64 binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: cirup-windows-x64.zip-unsigned-bin
           path: work/win-x64
 
       - name: Download unsigned Windows arm64 binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: cirup-windows-arm64.zip-unsigned-bin
           path: work/win-arm64
@@ -379,14 +379,14 @@ jobs:
           Compress-Archive -Path 'work/win-arm64/cirup.exe' -DestinationPath 'cirup-windows-arm64.zip' -Force
 
       - name: Upload artifact cirup-windows-x64.zip
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cirup-windows-x64.zip
           path: cirup-windows-x64.zip
           if-no-files-found: error
 
       - name: Upload artifact cirup-windows-arm64.zip
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cirup-windows-arm64.zip
           path: cirup-windows-arm64.zip
@@ -403,19 +403,19 @@ jobs:
 
     steps:
       - name: Download platform zip artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: cirup-*.zip
           path: dist
 
       - name: Download signed build NuGet artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: devolutions-cirup-build-nupkg
           path: dist
 
       - name: Download signed dotnet tool NuGet artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: devolutions-cirup-tool-nupkg
           path: dist
@@ -503,15 +503,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download native artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: dist
 
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.0.x
 
@@ -535,7 +535,7 @@ jobs:
             -OutputDir "dist/nuget"
 
       - name: Upload NuGet artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: devolutions-cirup-build-nupkg
           path: dist/nuget/Devolutions.Cirup.Build.*.nupkg
@@ -550,15 +550,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download native artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: dist
 
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
 
@@ -582,7 +582,7 @@ jobs:
             -OutputDir "dist/nuget"
 
       - name: Upload dotnet tool artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: devolutions-cirup-tool-nupkg
           path: dist/nuget/Devolutions.Cirup.Tool*.nupkg
@@ -623,21 +623,21 @@ jobs:
 
       - name: Download signed build NuGet artifact
         if: steps.publish_mode.outputs.dry_run == 'true' || steps.publish_mode.outputs.has_login_user == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: devolutions-cirup-build-nupkg
           path: dist
 
       - name: Download signed dotnet tool NuGet artifact
         if: steps.publish_mode.outputs.dry_run == 'true' || steps.publish_mode.outputs.has_login_user == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: devolutions-cirup-tool-nupkg
           path: dist
 
       - name: Setup .NET SDK
         if: steps.publish_mode.outputs.dry_run == 'true' || steps.publish_mode.outputs.has_login_user == 'true'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
 
